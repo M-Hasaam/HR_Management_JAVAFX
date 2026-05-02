@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.CorrectionController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Attendance Corrections" styleClass="module-title"/>
+            <Label text="Submit and review requests to amend attendance records" styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="12" VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <!-- Correction Form Card -->
+        <VBox styleClass="card" spacing="14">
+            <Label text="New Correction Request" styleClass="card-title"/>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Employee:" styleClass="form-label"/>
+                <ComboBox fx:id="cbEmployee" prefWidth="220"/>
+                <Button text="Load Records" onAction="#handleLoadRecords" styleClass="btn-secondary"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Attendance Record:" styleClass="form-label"/>
+                <ComboBox fx:id="cbAttendanceRecord" prefWidth="340"/>
+            </HBox>
+
+            <GridPane hgap="12" vgap="10">
+                <Label text="Original Value:"  styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="tfOriginalValue"  prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Corrected Value:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="tfCorrectedValue" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Justification:"   styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextArea fx:id="taJustification" prefWidth="300" prefRowCount="3" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+
+            <HBox>
+                <Button text="Submit Correction" onAction="#handleSubmitCorrection" styleClass="btn-primary"/>
+            </HBox>
+        </VBox>
+
+        <TableView fx:id="table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
+                <TableColumn fx:id="colEmployee"  text="Employee"  prefWidth="160"/>
+                <TableColumn fx:id="colDate"      text="Date"      prefWidth="100"/>
+                <TableColumn fx:id="colOriginal"  text="Original"  prefWidth="170"/>
+                <TableColumn fx:id="colCorrected" text="Corrected" prefWidth="170"/>
+                <TableColumn fx:id="colStatus"    text="Status"    prefWidth="100"/>
+            </columns>
+            <placeholder><Label text="No correction requests found." styleClass="label-muted"/></placeholder>
+        </TableView>
+    </VBox>
+</VBox>

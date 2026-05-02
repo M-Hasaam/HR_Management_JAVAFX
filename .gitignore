@@ -1,0 +1,49 @@
+# ── Maven build output ────────────────────────────────────────────
+target/
+
+# ── Compiled class files (outside target/) ───────────────────────
+*.class
+
+# ── Packaged artifacts ────────────────────────────────────────────
+*.jar
+*.war
+*.ear
+
+# ── IntelliJ IDEA user-specific state ────────────────────────────
+# Project-level .idea/ is kept (pom.xml, modules, inspections).
+# workspace.xml and datasource files are already ignored by .idea/.gitignore
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/shelf/
+.idea/httpRequests/
+.idea/dataSources/
+.idea/dataSources.local.xml
+*.iml
+!.idea/SDA.iml
+
+# ── Sensitive configuration ───────────────────────────────────────
+# database.properties contains DB credentials — each developer should
+# set their own. Copy and fill in before running.
+src/main/resources/database.properties
+target/classes/database.properties
+
+# ── Claude Code session files ─────────────────────────────────────
+.claude/
+
+# ── Generated doc images (extracted PDF pages — 52+ PNGs) ────────
+docs/d3_pages/
+
+# ── Logs ─────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── OS junk ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ── Python cache (generate_report.py) ────────────────────────────
+__pycache__/
+*.pyc
+*.pyo

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.EvaluationController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Performance Evaluation" styleClass="module-title"/>
+            <Label text="Manage evaluation cycles and submit structured employee evaluations" styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- ══ Tab 1: Evaluation Cycles (UC-11) ═══════════════════════════ -->
+            <Tab text="Evaluation Cycles">
+                <VBox spacing="12">
+                    <padding><Insets top="14"/></padding>
+
+                    <VBox styleClass="card" spacing="10">
+                        <Label text="New Evaluation Cycle" styleClass="card-title"/>
+
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Cycle Name:" styleClass="form-label"/>
+                            <TextField fx:id="tfCycleName" prefWidth="160" promptText="e.g. 2025-Annual"/>
+                            <Label text="Start Date:" styleClass="form-label"/>
+                            <DatePicker fx:id="dpStart" prefWidth="140"/>
+                            <Label text="End Date:" styleClass="form-label"/>
+                            <DatePicker fx:id="dpEnd" prefWidth="140"/>
+                        </HBox>
+
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Eval Type:" styleClass="form-label"/>
+                            <ComboBox fx:id="cbEvalType" prefWidth="160"/>
+                            <Label text="Scope / Dept:" styleClass="form-label"/>
+                            <ComboBox fx:id="cbScope" prefWidth="160"/>
+                        </HBox>
+
+                        <HBox spacing="10">
+                            <Button text="Save as Draft"
+                                    onAction="#handleSaveDraft" styleClass="btn-secondary"/>
+                            <Button fx:id="btnActivate" text="Activate Selected Cycle"
+                                    onAction="#handleActivateCycle" styleClass="btn-primary"/>
+                            <!-- Ext 3b: Admin grants grace period for an ACTIVE cycle -->
+                            <Button fx:id="btnSetGracePeriod" text="Set Grace Period"
+                                    onAction="#handleSetGracePeriod" styleClass="btn-secondary"/>
+                        </HBox>
+                    </VBox>
+
+                    <TableView fx:id="tableCycles" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colCycleId"     text="ID"     prefWidth="45"/>
+                            <TableColumn fx:id="colCycleName"   text="Name"   prefWidth="150"/>
+                            <TableColumn fx:id="colCycleStart"  text="Start"  prefWidth="100"/>
+                            <TableColumn fx:id="colCycleEnd"    text="End"    prefWidth="100"/>
+                            <TableColumn fx:id="colCycleType"   text="Type"   prefWidth="120"/>
+                            <TableColumn fx:id="colCycleScope"  text="Scope"  prefWidth="110"/>
+                            <TableColumn fx:id="colCycleStatus" text="Status" prefWidth="90"/>
+                        </columns>
+                        <placeholder><Label text="No evaluation cycles found." styleClass="label-muted"/></placeholder>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- ══ Tab 2: Submit Evaluation (UC-12) ═══════════════════════════ -->
+            <Tab text="Submit Evaluation">
+                <VBox spacing="12">
+                    <padding><Insets top="14"/></padding>
+
+                    <VBox styleClass="card" spacing="10">
+                        <Label text="Submit Employee Performance Evaluation" styleClass="card-title"/>
+
+                        <!-- Employee + Cycle selectors -->
+                        <GridPane hgap="14" vgap="8">
+                            <Label text="Employee:"  styleClass="form-label"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="cbEmpEval" prefWidth="220"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            <Label text="Cycle:"     styleClass="form-label"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="cbCycle" prefWidth="210"
+                                      GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                        </GridPane>
+
+                        <Separator/>
+                        <Label text="Competency Scores  (each 0 – 100)" styleClass="section-label"/>
+
+                        <!-- 5 competency fields in a 2-column layout, running score on right -->
+                        <GridPane hgap="16" vgap="8">
+                            <!-- Work Quality 25% -->
+                            <Label text="Work Quality (25%):"
+                                   styleClass="form-label"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextField fx:id="tfWorkQuality" prefWidth="80" promptText="0-100"
+                                       onKeyReleased="#updateRunningScore"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                            <!-- Technical Skills 25% -->
+                            <Label text="Technical Skills (25%):"
+                                   styleClass="form-label"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <TextField fx:id="tfTechnical" prefWidth="80" promptText="0-100"
+                                       onKeyReleased="#updateRunningScore"
+                                       GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                            <!-- Communication 20% -->
+                            <Label text="Communication (20%):"
+                                   styleClass="form-label"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <TextField fx:id="tfCommunication" prefWidth="80" promptText="0-100"
+                                       onKeyReleased="#updateRunningScore"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <!-- Teamwork 15% -->
+                            <Label text="Teamwork (15%):"
+                                   styleClass="form-label"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                            <TextField fx:id="tfTeamwork" prefWidth="80" promptText="0-100"
+                                       onKeyReleased="#updateRunningScore"
+                                       GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                            <!-- Leadership 15% -->
+                            <Label text="Leadership (15%):"
+                                   styleClass="form-label"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <TextField fx:id="tfLeadership" prefWidth="80" promptText="0-100"
+                                       onKeyReleased="#updateRunningScore"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <!-- Calculated aggregate score -->
+                            <Label text="Calculated Score:"
+                                   styleClass="form-label"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                            <Label fx:id="lblAggregate" text="—"
+                                   styleClass="score-badge"
+                                   GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                        </GridPane>
+
+                        <Separator/>
+
+                        <Label text="Qualitative Feedback / Remarks:" styleClass="form-label"/>
+                        <TextArea fx:id="taRemarks" prefWidth="560" prefRowCount="3"
+                                  promptText="Provide written feedback on performance, strengths, and areas for improvement…"/>
+
+                        <HBox>
+                            <Button text="Submit Evaluation"
+                                    onAction="#handleSubmitEvaluation" styleClass="btn-primary"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Results table -->
+                    <TableView fx:id="tableEvals" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colEvalId"       text="ID"       prefWidth="45"/>
+                            <TableColumn fx:id="colEvalEmployee" text="Employee"  prefWidth="160"/>
+                            <TableColumn fx:id="colEvalCycle"    text="Cycle ID"  prefWidth="80"/>
+                            <TableColumn fx:id="colEvalScore"    text="Score"     prefWidth="80"/>
+                            <TableColumn fx:id="colEvalRemarks"  text="Remarks"   prefWidth="220"/>
+                            <TableColumn fx:id="colEvalStatus"   text="Status"    prefWidth="100"/>
+                        </columns>
+                        <placeholder><Label text="No evaluations submitted yet." styleClass="label-muted"/></placeholder>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </VBox>
+</VBox>

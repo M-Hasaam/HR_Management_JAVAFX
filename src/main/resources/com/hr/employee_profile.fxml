@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.ProfileScreenController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Employee Profile" styleClass="module-title"/>
+            <Label text="View detailed information about a selected employee" styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="16" VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <!-- Selector -->
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar-panel">
+            <Label text="Employee:" styleClass="form-label"/>
+            <ComboBox fx:id="cbEmployee" prefWidth="220"/>
+            <Label text="Role:" styleClass="form-label"/>
+            <ComboBox fx:id="cbRole" prefWidth="160"/>
+            <Button text="View Profile" onAction="#handleViewProfile" styleClass="btn-primary"/>
+        </HBox>
+
+        <!-- Profile Card -->
+        <VBox styleClass="card" spacing="0">
+            <Label text="Profile Details" styleClass="card-title">
+                <VBox.margin><Insets bottom="14"/></VBox.margin>
+            </Label>
+
+            <GridPane hgap="0" vgap="0">
+                <!-- Row 0 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="Employee ID"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="0" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblEmpId" text="—"/>
+                </HBox>
+                <!-- Row 1 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="Full Name"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="1" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblName" text="—"/>
+                </HBox>
+                <!-- Row 2 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="Email"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="2" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblEmail" text="—"/>
+                </HBox>
+                <!-- Row 3 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="3" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="Phone"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblPhone" text="—"/>
+                </HBox>
+                <!-- Row 4 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="4" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="Department"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="4" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblDept" text="—"/>
+                </HBox>
+                <!-- Row 5 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="5" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="Position"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="5" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblPosition" text="—"/>
+                </HBox>
+                <!-- Row 6 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="6" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="Status"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="6" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblStatus" text="—"/>
+                </HBox>
+                <!-- Row 7 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="7" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="National ID"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="7" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblNationalId" text="—"/>
+                </HBox>
+                <!-- Row 8 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="8" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label text="Employment Type"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="8" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16; -fx-border-color: transparent transparent #f3f4f6 transparent; -fx-border-width: 0 0 1 0;">
+                    <Label fx:id="lblEmpType" text="—"/>
+                </HBox>
+                <!-- Row 9 -->
+                <HBox GridPane.columnIndex="0" GridPane.rowIndex="9" prefWidth="220" styleClass="card-label"
+                      style="-fx-padding: 10 16 10 0;">
+                    <Label text="Hire Date"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" GridPane.rowIndex="9" HBox.hgrow="ALWAYS" styleClass="card-value"
+                      style="-fx-padding: 10 0 10 16;">
+                    <Label fx:id="lblHireDate" text="—"/>
+                </HBox>
+            </GridPane>
+        </VBox>
+
+        <Label fx:id="lblPermissions" text="Permitted fields: —" styleClass="label-muted"
+               style="-fx-font-style: italic;"/>
+    </VBox>
+</VBox>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.ReportController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Compliance Reports" styleClass="module-title"/>
+            <Label text="Generate and archive regulatory compliance reports" styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="12" VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar-panel">
+            <Label text="Domain:" styleClass="form-label"/>
+            <ComboBox fx:id="cbDomain" prefWidth="140"/>
+            <Label text="Period:" styleClass="form-label"/>
+            <TextField fx:id="tfPeriod" prefWidth="130" promptText="e.g. 2025-Q1"/>
+            <Label text="Format:" styleClass="form-label"/>
+            <ComboBox fx:id="cbFormat" prefWidth="110"/>
+            <HBox HBox.hgrow="ALWAYS"/>
+            <Button text="Generate Report" onAction="#handleGenerate" styleClass="btn-primary"/>
+        </HBox>
+
+        <Label fx:id="lblResult" text="Generated report summary will appear here."
+               styleClass="label-info"/>
+
+        <TableView fx:id="table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId"          text="ID"           prefWidth="50"/>
+                <TableColumn fx:id="colType"        text="Type"         prefWidth="160"/>
+                <TableColumn fx:id="colGeneratedAt" text="Generated At" prefWidth="160"/>
+                <TableColumn fx:id="colFormat"      text="Format"       prefWidth="80"/>
+                <TableColumn fx:id="colStatus"      text="Status"       prefWidth="100"/>
+                <TableColumn fx:id="colArchivePath" text="Archive Path" prefWidth="200"/>
+            </columns>
+            <placeholder><Label text="No compliance reports generated yet." styleClass="label-muted"/></placeholder>
+        </TableView>
+    </VBox>
+</VBox>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.EmployeeController"
+      spacing="0" styleClass="module-pane">
+
+    <!-- Header -->
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Employees" styleClass="module-title"/>
+            <Label text="Add, edit, and manage your entire workforce" styleClass="module-subtitle"/>
+        </VBox>
+        <HBox HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="tfSearch" promptText="Search employees..." prefWidth="220"/>
+        <Button text="+ Register Employee" onAction="#handleAdd" styleClass="btn-primary"/>
+    </HBox>
+
+    <!-- Stats bar -->
+    <HBox fx:id="statsBar" styleClass="stats-bar" alignment="CENTER_LEFT" spacing="24">
+        <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+        <Label fx:id="lblTotal"    text="0 Total"    styleClass="stats-bar-item"/>
+        <Label fx:id="lblActive"   text="0 Active"   styleClass="stats-bar-item-green"/>
+        <Label fx:id="lblInactive" text="0 Inactive" styleClass="stats-bar-item-red"/>
+    </HBox>
+
+    <!-- Card grid -->
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" styleClass="card-scroll" hbarPolicy="NEVER">
+        <FlowPane fx:id="cardPane" hgap="16" vgap="16">
+            <padding><Insets top="20" right="24" bottom="24" left="24"/></padding>
+        </FlowPane>
+    </ScrollPane>
+
+</VBox>

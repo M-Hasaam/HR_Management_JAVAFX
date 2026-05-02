@@ -1,0 +1,5 @@
+# Copy this file to database.properties and fill in your MySQL credentials
+# database.properties is git-ignored to keep passwords out of the repo
+db.url=jdbc:mysql://localhost:3306/hr_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+db.user=root
+db.password=YOUR_PASSWORD_HERE

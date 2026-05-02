@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.PayrollController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Payroll Processing" styleClass="module-title"/>
+            <Label text="Net Pay = Basic Salary − Tax (15%) − Benefits (5%)" styleClass="module-subtitle"/>
+        </VBox>
+        <HBox HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="tfSearch" promptText="Search by employee..." prefWidth="200"/>
+        <Button text="Process Payroll" onAction="#handleProcess" styleClass="btn-primary"/>
+    </HBox>
+
+    <!-- Stats bar -->
+    <HBox fx:id="statsBar" styleClass="stats-bar" alignment="CENTER_LEFT" spacing="24">
+        <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+        <Label fx:id="lblCount"    text="0 Records"    styleClass="stats-bar-item"/>
+        <Label fx:id="lblTotalNet" text="PKR 0 Total Net" styleClass="stats-bar-item-green"/>
+    </HBox>
+
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" styleClass="card-scroll" hbarPolicy="NEVER">
+        <FlowPane fx:id="cardPane" hgap="16" vgap="16">
+            <padding><Insets top="20" right="24" bottom="24" left="24"/></padding>
+        </FlowPane>
+    </ScrollPane>
+
+</VBox>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.DashboardController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Dashboard" styleClass="module-title"/>
+            <Label text="Leave balances and attendance overview for each employee" styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="14" VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <!-- Employee selector -->
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar-panel">
+            <Label text="Employee:" styleClass="form-label"/>
+            <ComboBox fx:id="cbEmployee" prefWidth="220"/>
+            <Button text="View Dashboard" onAction="#handleViewDashboard" styleClass="btn-primary"/>
+        </HBox>
+
+        <!-- Stat Cards -->
+        <HBox spacing="12">
+            <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="ANNUAL LEAVE" styleClass="stat-label"/>
+                <Label fx:id="lblAnnual" text="—" styleClass="stat-number"
+                       style="-fx-text-fill: #059669;"/>
+                <Label text="Days Remaining" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="SICK LEAVE" styleClass="stat-label"/>
+                <Label fx:id="lblSick" text="—" styleClass="stat-number"
+                       style="-fx-text-fill: #2563eb;"/>
+                <Label text="Days Remaining" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="PERSONAL LEAVE" styleClass="stat-label"/>
+                <Label fx:id="lblPersonal" text="—" styleClass="stat-number"
+                       style="-fx-text-fill: #7c3aed;"/>
+                <Label text="Days Remaining" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="ATTENDANCE" styleClass="stat-label"/>
+                <Label fx:id="lblAttendanceCount" text="—" styleClass="stat-number"
+                       style="-fx-text-fill: #d97706;"/>
+                <Label text="Total Records" styleClass="stat-label"/>
+            </VBox>
+        </HBox>
+
+        <!-- Attendance Table -->
+        <TableView fx:id="table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colDate"     text="Date"      prefWidth="130"/>
+                <TableColumn fx:id="colCheckIn"  text="Check In"  prefWidth="130"/>
+                <TableColumn fx:id="colCheckOut" text="Check Out" prefWidth="130"/>
+                <TableColumn fx:id="colHours"    text="Hours"     prefWidth="80"/>
+                <TableColumn fx:id="colStatus"   text="Status"    prefWidth="120"/>
+            </columns>
+            <placeholder><Label text="Select an employee and click View Dashboard." styleClass="label-muted"/></placeholder>
+        </TableView>
+    </VBox>
+</VBox>

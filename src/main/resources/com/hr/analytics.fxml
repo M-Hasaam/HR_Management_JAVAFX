@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.AnalyticsController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="HR Analytics" styleClass="module-title"/>
+            <Label text="Generate workforce metrics and insights across selected periods" styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="12" VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <HBox spacing="16">
+            <!-- Metric Selection Card -->
+            <VBox styleClass="card" spacing="12" prefWidth="240">
+                <Label text="Select Metrics" styleClass="card-title"/>
+                <CheckBox fx:id="chkHeadcount" text="Headcount"/>
+                <CheckBox fx:id="chkAttrition" text="Attrition Rate"/>
+                <CheckBox fx:id="chkLeave"     text="Leave Utilization"/>
+                <CheckBox fx:id="chkAttendance" text="Attendance Rate"/>
+            </VBox>
+
+            <!-- Parameters Card -->
+            <VBox styleClass="card" spacing="12" HBox.hgrow="ALWAYS">
+                <Label text="Parameters" styleClass="card-title"/>
+                <GridPane hgap="12" vgap="10">
+                    <Label text="Period:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="tfPeriod" prefWidth="180" promptText="e.g. 2025-Q1"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="Scope:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="tfScope" prefWidth="180" promptText="e.g. ALL or dept name"
+                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                </GridPane>
+                <HBox>
+                    <Button text="Generate Analytics" onAction="#handleGenerate" styleClass="btn-primary"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <!-- Results -->
+        <TextArea fx:id="taResult" VBox.vgrow="ALWAYS" editable="false"
+                  promptText="Analytics results will appear here after generation..."
+                  style="-fx-font-family: 'Consolas', 'Monospaced'; -fx-font-size: 12px;"/>
+    </VBox>
+</VBox>

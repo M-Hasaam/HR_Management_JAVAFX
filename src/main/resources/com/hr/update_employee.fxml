@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.UpdateEmployeeController"
+      spacing="0" styleClass="module-pane">
+
+    <!-- Page Header -->
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Update Employee Record" styleClass="module-title"/>
+            <Label text="Search for an employee, edit their details, and provide a mandatory reason for audit compliance"
+                   styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <!-- Banner area (errors / warnings / conflict / retry) -->
+    <VBox fx:id="bannerArea" spacing="6" visible="false" managed="false">
+        <padding><Insets top="12" right="24" bottom="0" left="24"/></padding>
+
+        <!-- General error / info banner -->
+        <Label fx:id="lblBanner" visible="false" managed="false"
+               styleClass="form-banner-error" wrapText="true" maxWidth="Infinity"/>
+
+        <!-- 4a: Concurrent edit conflict strip -->
+        <VBox fx:id="conflictBox" visible="false" managed="false"
+              styleClass="form-banner-warning" spacing="8">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="Concurrent Edit Detected" style="-fx-font-weight:bold; -fx-text-fill:#92400e;"/>
+            <Label fx:id="lblConflict" wrapText="true"/>
+            <HBox spacing="10">
+                <Button fx:id="btnKeepMine"   text="Keep My Changes"         onAction="#handleKeepMine"   styleClass="btn-warning-sm"/>
+                <Button fx:id="btnReloadData" text="Reload Current Data"      onAction="#handleReloadData" styleClass="btn-secondary"/>
+            </HBox>
+        </VBox>
+
+        <!-- 4b: Retry strip (shown when DB write fails) -->
+        <HBox fx:id="retryBox" visible="false" managed="false"
+              styleClass="form-banner-error" spacing="12" alignment="CENTER_LEFT">
+            <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
+            <Label text="Save failed — your changes are preserved in the form." HBox.hgrow="ALWAYS" wrapText="true"/>
+            <Button fx:id="btnRetry" text="Retry Save" onAction="#handleSave" styleClass="btn-danger"/>
+        </HBox>
+    </VBox>
+
+    <!-- Scrollable body -->
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" styleClass="card-scroll" hbarPolicy="NEVER">
+        <VBox spacing="20">
+            <padding><Insets top="20" right="24" bottom="32" left="24"/></padding>
+
+            <!-- ══ SEARCH SECTION ══ -->
+            <VBox styleClass="form-section-card" spacing="0">
+                <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                    <Label text="Search &amp; Select Employee" styleClass="form-section-title"/>
+                </HBox>
+                <VBox styleClass="form-section-body" spacing="12">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="tfSearch" promptText="Search by name, ID or email..."
+                                   HBox.hgrow="ALWAYS"/>
+                        <ComboBox fx:id="cbDeptFilter" promptText="All Departments" minWidth="160"/>
+                        <Button text="Search"   onAction="#handleSearch"  styleClass="btn-primary"/>
+                        <Button text="Show All" onAction="#handleShowAll" styleClass="btn-secondary"/>
+                    </HBox>
+                    <TableView fx:id="resultsTable" prefHeight="200"/>
+                </VBox>
+            </VBox>
+
+            <!-- ══ EDIT SECTION (hidden until employee selected) ══ -->
+            <VBox fx:id="editSection" visible="false" managed="false" spacing="16">
+
+                <!-- Editing-banner strip -->
+                <HBox styleClass="form-section-card" alignment="CENTER_LEFT" spacing="14">
+                    <padding><Insets top="14" right="18" bottom="14" left="20"/></padding>
+                    <Label text="Editing:" styleClass="form-label"/>
+                    <Label fx:id="lblEditingName" styleClass="form-section-title" HBox.hgrow="ALWAYS"/>
+                    <Button text="Cancel Edit" onAction="#handleCancel" styleClass="btn-secondary"/>
+                </HBox>
+
+                <!-- ── Personal Details ── -->
+                <VBox styleClass="form-section-card" spacing="0">
+                    <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                        <Label text="1   Personal Details" styleClass="form-section-title"/>
+                    </HBox>
+                    <VBox styleClass="form-section-body" spacing="16">
+
+                        <HBox spacing="16">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="First Name *" styleClass="form-label"/>
+                                <TextField fx:id="tfFirstName" promptText="First name"/>
+                                <Label fx:id="errFirstName" styleClass="form-field-error" visible="false" managed="false"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Last Name *" styleClass="form-label"/>
+                                <TextField fx:id="tfLastName" promptText="Last name"/>
+                                <Label fx:id="errLastName" styleClass="form-field-error" visible="false" managed="false"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- National ID — requires approval workflow (3c) -->
+                        <HBox spacing="16">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="National ID" styleClass="form-label"/>
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+                                    <TextField fx:id="tfNationalId" editable="false"
+                                               style="-fx-opacity:0.7;" HBox.hgrow="ALWAYS"/>
+                                    <Button fx:id="btnRequestNidChange" text="Request Change"
+                                            onAction="#handleRequestNidChange" styleClass="btn-warning-sm"/>
+                                </HBox>
+                                <Label fx:id="lblNidStatus" styleClass="form-hint"
+                                       visible="false" managed="false"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Date of Birth" styleClass="form-label"/>
+                                <DatePicker fx:id="dpDob" maxWidth="Infinity"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox spacing="16">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Gender" styleClass="form-label"/>
+                                <ComboBox fx:id="cbGender" maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Contact Number *" styleClass="form-label"/>
+                                <TextField fx:id="tfPhone" promptText="e.g. 0300-1234567"/>
+                                <Label fx:id="errPhone" styleClass="form-field-error" visible="false" managed="false"/>
+                            </VBox>
+                        </HBox>
+
+                        <VBox spacing="4">
+                            <Label text="Email Address *" styleClass="form-label"/>
+                            <TextField fx:id="tfEmail" promptText="employee@company.com"/>
+                            <Label fx:id="errEmail" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+
+                        <VBox spacing="4">
+                            <Label text="Residential Address" styleClass="form-label"/>
+                            <TextArea fx:id="taAddress" prefRowCount="2" wrapText="true"
+                                      promptText="Residential address"/>
+                        </VBox>
+
+                    </VBox>
+                </VBox>
+
+                <!-- ── Organizational Details ── -->
+                <VBox styleClass="form-section-card" spacing="0">
+                    <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                        <Label text="2   Organizational Details" styleClass="form-section-title"/>
+                    </HBox>
+                    <VBox styleClass="form-section-body" spacing="16">
+
+                        <HBox spacing="16">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Department" styleClass="form-label"/>
+                                <ComboBox fx:id="cbDepartment" maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Designation / Position *" styleClass="form-label"/>
+                                <TextField fx:id="tfDesignation" promptText="e.g. Senior Engineer"/>
+                                <Label fx:id="errDesignation" styleClass="form-field-error" visible="false" managed="false"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox spacing="16">
+                            <!-- Employment Type — Admin only (3b) -->
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+                                    <Label text="Employment Type" styleClass="form-label"/>
+                                    <Label fx:id="lblEmpTypeRestricted" text="Admin Only"
+                                           styleClass="badge-inactive" visible="false" managed="false"/>
+                                </HBox>
+                                <ComboBox fx:id="cbEmploymentType" maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Status" styleClass="form-label"/>
+                                <ComboBox fx:id="cbStatus" maxWidth="Infinity"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Basic Salary — Admin only (3b) -->
+                        <VBox spacing="4">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="Basic Salary (PKR)" styleClass="form-label"/>
+                                <Label fx:id="lblSalaryRestricted" text="Admin Only"
+                                       styleClass="badge-inactive" visible="false" managed="false"/>
+                            </HBox>
+                            <TextField fx:id="tfSalary" promptText="e.g. 75000"/>
+                            <Label fx:id="errSalary" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+
+                    </VBox>
+                </VBox>
+
+                <!-- ── Reason for Update (mandatory) ── -->
+                <VBox styleClass="form-section-card" spacing="0">
+                    <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                        <Label text="3   Reason for Update  *" styleClass="form-section-title"/>
+                    </HBox>
+                    <VBox styleClass="form-section-body" spacing="8">
+                        <Label text="Mandatory — every update is stored in the audit log with this reason."
+                               styleClass="form-hint"/>
+                        <TextArea fx:id="tfReason" prefRowCount="3" wrapText="true"
+                                  promptText="e.g. Annual salary revision, promotion, address correction..."/>
+                        <Label fx:id="errReason" styleClass="form-field-error" visible="false" managed="false"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Action Buttons -->
+                <HBox spacing="12" alignment="CENTER_RIGHT">
+                    <padding><Insets top="4" bottom="4"/></padding>
+                    <Button text="Cancel" onAction="#handleCancel" styleClass="btn-secondary"/>
+                    <Button fx:id="btnSave" text="Save Changes" onAction="#handleSave" styleClass="btn-primary"/>
+                </HBox>
+
+            </VBox>
+            <!-- end editSection -->
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.AttendanceController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Attendance" styleClass="module-title"/>
+            <Label text="Track employee check-ins and check-outs in real time" styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="12" VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar-panel">
+            <Label text="Employee:" styleClass="form-label"/>
+            <ComboBox fx:id="cbEmployee" prefWidth="200"/>
+            <Label text="Method:" styleClass="form-label"/>
+            <ComboBox fx:id="cbMethod" prefWidth="130"/>
+            <HBox HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnCheckIn"  text="Check In"  onAction="#handleCheckIn"  styleClass="btn-success"/>
+            <Button fx:id="btnCheckOut" text="Check Out" onAction="#handleCheckOut" styleClass="btn-warning" disable="true"/>
+        </HBox>
+
+        <Label fx:id="lblStatus" styleClass="label-muted"/>
+
+        <TableView fx:id="table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId"       text="ID"        prefWidth="50"/>
+                <TableColumn fx:id="colEmployee" text="Employee"  prefWidth="160"/>
+                <TableColumn fx:id="colDate"     text="Date"      prefWidth="100"/>
+                <TableColumn fx:id="colCheckIn"  text="Check In"  prefWidth="120"/>
+                <TableColumn fx:id="colCheckOut" text="Check Out" prefWidth="120"/>
+                <TableColumn fx:id="colHours"    text="Hours"     prefWidth="70"/>
+                <TableColumn fx:id="colStatus"   text="Status"    prefWidth="100"/>
+            </columns>
+            <placeholder><Label text="No attendance records found." styleClass="label-muted"/></placeholder>
+        </TableView>
+    </VBox>
+</VBox>

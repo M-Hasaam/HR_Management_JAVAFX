@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.ProbationController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Probation Monitoring" styleClass="module-title"/>
+            <Label text="Track active probation periods and record final employment decisions" styleClass="module-subtitle"/>
+        </VBox>
+        <HBox HBox.hgrow="ALWAYS"/>
+        <Button text="Refresh" onAction="#handleLoad" styleClass="btn-secondary"/>
+    </HBox>
+
+    <VBox spacing="12" VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <!-- Step 1: Dashboard table — auto-loads ACTIVE records -->
+        <TableView fx:id="table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId"         text="ID"          prefWidth="45"/>
+                <TableColumn fx:id="colEmployee"   text="Employee"    prefWidth="160"/>
+                <TableColumn fx:id="colStart"      text="Start"       prefWidth="100"/>
+                <TableColumn fx:id="colEnd"        text="End"         prefWidth="100"/>
+                <TableColumn fx:id="colDaysLeft"   text="Days Left"   prefWidth="90"/>
+                <TableColumn fx:id="colExtensions" text="Extensions"  prefWidth="85"/>
+                <TableColumn fx:id="colDecision"   text="Decision"    prefWidth="110"/>
+                <TableColumn fx:id="colStatus"     text="Status"      prefWidth="80"/>
+            </columns>
+            <placeholder>
+                <Label text="No active probation cases." styleClass="label-muted"/>
+            </placeholder>
+        </TableView>
+
+        <!-- Step 3 / 4: Decision panel -->
+        <VBox styleClass="card" spacing="10">
+            <Label text="Record Probation Decision" styleClass="card-title"/>
+
+            <!-- Decision type + date -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Decision:" styleClass="form-label"/>
+                <ComboBox fx:id="cbDecision" prefWidth="160"/>
+                <Label text="Decision Date:" styleClass="form-label"/>
+                <DatePicker fx:id="dpDecisionDate" prefWidth="140"/>
+            </HBox>
+
+            <!-- Ext 3a: New end date — shown only when EXTENDED is selected -->
+            <HBox fx:id="hboxNewEndDate" spacing="12" alignment="CENTER_LEFT">
+                <Label text="New End Date:" styleClass="form-label"/>
+                <DatePicker fx:id="dpNewEndDate" prefWidth="160"
+                            promptText="Required for Extension"/>
+            </HBox>
+
+            <!-- Reason — shown only when TERMINATED is selected -->
+            <HBox fx:id="hboxReason" spacing="12" alignment="CENTER_LEFT">
+                <Label text="Termination Reason:" styleClass="form-label"/>
+                <TextField fx:id="tfReason" prefWidth="400"
+                           promptText="Required — document reason for termination"/>
+            </HBox>
+
+            <!-- Notes + submit -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Notes:" styleClass="form-label"/>
+                <TextArea fx:id="taNotes" prefWidth="440" prefRowCount="2" HBox.hgrow="ALWAYS"
+                          promptText="Optional HR notes…"/>
+                <Button fx:id="btnDecide" text="Record Decision"
+                        onAction="#handleDecision" disable="true" styleClass="btn-primary"/>
+            </HBox>
+        </VBox>
+    </VBox>
+</VBox>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.RegisterEmployeeController"
+      spacing="0" styleClass="module-pane">
+
+    <!-- Page Header -->
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Register New Employee" styleClass="module-title"/>
+            <Label text="Complete all mandatory fields marked with * to enrol a new employee"
+                   styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <!-- Error / Warning Banner (hidden by default, shown on validation errors) -->
+    <VBox fx:id="bannerArea" spacing="6" visible="false" managed="false">
+        <padding><Insets top="12" right="24" bottom="0" left="24"/></padding>
+        <Label fx:id="lblBanner" visible="false" managed="false"
+               styleClass="form-banner-error" wrapText="true" maxWidth="Infinity"/>
+        <HBox fx:id="capacityWarningBox" spacing="12" alignment="CENTER_LEFT"
+              visible="false" managed="false" styleClass="form-banner-warning">
+            <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
+            <Label fx:id="lblCapacityWarning" wrapText="true" HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnOverride" text="Override" onAction="#handleCapacityOverride"
+                    styleClass="btn-warning-sm"/>
+        </HBox>
+    </VBox>
+
+    <!-- Scrollable form -->
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" styleClass="card-scroll" hbarPolicy="NEVER">
+        <VBox spacing="20">
+            <padding><Insets top="20" right="24" bottom="32" left="24"/></padding>
+
+            <!-- ══ SECTION 1 — Personal Details ══ -->
+            <VBox styleClass="form-section-card" spacing="0">
+                <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                    <Label text="1   Personal Details" styleClass="form-section-title"/>
+                </HBox>
+                <VBox styleClass="form-section-body" spacing="16">
+
+                    <HBox spacing="16">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="First Name *" styleClass="form-label"/>
+                            <TextField fx:id="tfFirstName" promptText="Enter first name"/>
+                            <Label fx:id="errFirstName" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Last Name *" styleClass="form-label"/>
+                            <TextField fx:id="tfLastName" promptText="Enter last name"/>
+                            <Label fx:id="errLastName" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="16">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="National ID *" styleClass="form-label"/>
+                            <TextField fx:id="tfNationalId" promptText="e.g. 42101-1234567-8"/>
+                            <Label fx:id="errNationalId" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Date of Birth *" styleClass="form-label"/>
+                            <DatePicker fx:id="dpDateOfBirth" maxWidth="Infinity"/>
+                            <Label fx:id="errDob" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="16">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Gender *" styleClass="form-label"/>
+                            <ComboBox fx:id="cbGender" promptText="Select gender" maxWidth="Infinity"/>
+                            <Label fx:id="errGender" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Contact Number *" styleClass="form-label"/>
+                            <TextField fx:id="tfPhone" promptText="e.g. 0300-1234567"/>
+                            <Label fx:id="errPhone" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                    </HBox>
+
+                    <VBox spacing="4">
+                        <Label text="Email Address *" styleClass="form-label"/>
+                        <TextField fx:id="tfEmail" promptText="employee@company.com"/>
+                        <Label fx:id="errEmail" styleClass="form-field-error" visible="false" managed="false"/>
+                    </VBox>
+
+                    <VBox spacing="4">
+                        <Label text="Residential Address *" styleClass="form-label"/>
+                        <TextArea fx:id="taAddress" promptText="Enter full residential address"
+                                  prefRowCount="3" wrapText="true"/>
+                        <Label fx:id="errAddress" styleClass="form-field-error" visible="false" managed="false"/>
+                    </VBox>
+
+                </VBox>
+            </VBox>
+
+            <!-- ══ SECTION 2 — Organizational Details ══ -->
+            <VBox styleClass="form-section-card" spacing="0">
+                <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                    <Label text="2   Organizational Details" styleClass="form-section-title"/>
+                </HBox>
+                <VBox styleClass="form-section-body" spacing="16">
+
+                    <HBox spacing="16">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Department *" styleClass="form-label"/>
+                            <ComboBox fx:id="cbDepartment" promptText="Select department" maxWidth="Infinity"/>
+                            <Label fx:id="errDepartment" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Designation / Position *" styleClass="form-label"/>
+                            <TextField fx:id="tfDesignation" promptText="e.g. Software Engineer"/>
+                            <Label fx:id="errDesignation" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="16">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Employment Type *" styleClass="form-label"/>
+                            <ComboBox fx:id="cbEmploymentType" promptText="Select type" maxWidth="Infinity"/>
+                            <Label fx:id="errEmploymentType" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Joining Date *" styleClass="form-label"/>
+                            <DatePicker fx:id="dpJoiningDate" maxWidth="Infinity"/>
+                            <Label fx:id="errJoiningDate" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="16">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Probation End Date" styleClass="form-label"/>
+                            <DatePicker fx:id="dpProbationEnd" maxWidth="Infinity"/>
+                            <Label text="Auto-populated based on employment type" styleClass="form-hint"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Basic Salary (PKR)" styleClass="form-label"/>
+                            <TextField fx:id="tfSalary" promptText="e.g. 50000"/>
+                            <Label fx:id="errSalary" styleClass="form-field-error" visible="false" managed="false"/>
+                        </VBox>
+                    </HBox>
+
+                </VBox>
+            </VBox>
+
+            <!-- Action Buttons -->
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <padding><Insets top="4" bottom="4"/></padding>
+                <Button text="Clear Form" onAction="#handleClear" styleClass="btn-secondary"/>
+                <Button fx:id="btnSubmit" text="Submit Registration"
+                        onAction="#handleSubmit" styleClass="btn-primary"/>
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>

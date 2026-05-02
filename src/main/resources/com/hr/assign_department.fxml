@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.AssignDepartmentController"
+      spacing="0" styleClass="module-pane">
+
+    <!-- Page Header -->
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Assign Employee to Department" styleClass="module-title"/>
+            <Label text="Search for an employee, select the target department, set the effective date, and confirm the transfer"
+                   styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <!-- Banner area (all warnings / blocks shown here) -->
+    <VBox fx:id="bannerArea" spacing="6" visible="false" managed="false">
+        <padding><Insets top="12" right="24" bottom="0" left="24"/></padding>
+
+        <!-- General error / info -->
+        <Label fx:id="lblBanner" visible="false" managed="false"
+               styleClass="form-banner-error" wrapText="true" maxWidth="Infinity"/>
+
+        <!-- 3c: Active offboarding blocks the assignment -->
+        <VBox fx:id="offboardingBlockBox" visible="false" managed="false"
+              styleClass="form-banner-error" spacing="8">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="Assignment Blocked — Active Offboarding Workflow"
+                   style="-fx-font-weight:bold;"/>
+            <Label text="This employee is currently in an active offboarding workflow. The department assignment is blocked until the offboarding process is cancelled first."
+                   wrapText="true"/>
+        </VBox>
+
+        <!-- 3a: Dept at capacity — override allowed with justification -->
+        <VBox fx:id="capacityWarningBox" visible="false" managed="false"
+              styleClass="form-banner-warning" spacing="8">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="Department at Maximum Headcount"
+                   style="-fx-font-weight:bold; -fx-text-fill:#92400e;"/>
+            <Label text="This department has reached its maximum headcount. You may override with documented authorization justification."
+                   wrapText="true"/>
+            <Label text="Override Justification *" styleClass="form-label"/>
+            <TextArea fx:id="taCapacityJustification" prefRowCount="2" wrapText="true"
+                      promptText="Explain the business reason for exceeding department capacity..."/>
+        </VBox>
+
+        <!-- 3b: Backdated effective date — explicit acknowledgment required -->
+        <VBox fx:id="backdateWarningBox" visible="false" managed="false"
+              styleClass="form-banner-warning" spacing="8">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="Backdated Assignment Warning"
+                   style="-fx-font-weight:bold; -fx-text-fill:#92400e;"/>
+            <Label fx:id="lblBackdateWarning" wrapText="true"/>
+            <CheckBox fx:id="chkBackdateAck"
+                      text="I acknowledge that this backdated assignment may affect historical headcount and reporting records."/>
+        </VBox>
+
+        <!-- 4c: Security clearance mismatch — hard block -->
+        <VBox fx:id="clearanceMismatchBox" visible="false" managed="false"
+              styleClass="form-banner-error" spacing="8">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="Security Clearance Mismatch — Assignment Blocked"
+                   style="-fx-font-weight:bold;"/>
+            <Label fx:id="lblClearanceMismatch" wrapText="true"/>
+        </VBox>
+
+        <!-- 4b: Dual reporting conflict — warning, user must confirm -->
+        <VBox fx:id="dualReportingBox" visible="false" managed="false"
+              styleClass="form-banner-warning" spacing="8">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="Dual Reporting Conflict Detected"
+                   style="-fx-font-weight:bold; -fx-text-fill:#92400e;"/>
+            <Label fx:id="lblDualReporting" wrapText="true"/>
+        </VBox>
+
+        <!-- 4a: AD sync failure (shown after a successful save) -->
+        <HBox fx:id="adSyncFailBox" visible="false" managed="false"
+              styleClass="form-banner-warning" spacing="12" alignment="CENTER_LEFT">
+            <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
+            <Label text="Access-rights synchronization has been queued — IT has been alerted. The assignment was saved successfully."
+                   HBox.hgrow="ALWAYS" wrapText="true"
+                   style="-fx-text-fill:#92400e;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Scrollable body -->
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" styleClass="card-scroll" hbarPolicy="NEVER">
+        <VBox spacing="20">
+            <padding><Insets top="20" right="24" bottom="32" left="24"/></padding>
+
+            <!-- ══ 1  SEARCH SECTION ══ -->
+            <VBox styleClass="form-section-card" spacing="0">
+                <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                    <Label text="1   Search &amp; Select Employee" styleClass="form-section-title"/>
+                </HBox>
+                <VBox styleClass="form-section-body" spacing="12">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="tfSearch" promptText="Search by name, ID or email..."
+                                   HBox.hgrow="ALWAYS"/>
+                        <ComboBox fx:id="cbStatusFilter" promptText="All Statuses" minWidth="140"/>
+                        <Button text="Search"   onAction="#handleSearch"  styleClass="btn-primary"/>
+                        <Button text="Show All" onAction="#handleShowAll" styleClass="btn-secondary"/>
+                    </HBox>
+                    <TableView fx:id="resultsTable" prefHeight="200"/>
+                </VBox>
+            </VBox>
+
+            <!-- ══ ASSIGNMENT SECTION (hidden until employee selected) ══ -->
+            <VBox fx:id="assignSection" visible="false" managed="false" spacing="16">
+
+                <!-- Selected-employee strip -->
+                <HBox styleClass="form-section-card" alignment="CENTER_LEFT" spacing="14">
+                    <padding><Insets top="14" right="18" bottom="14" left="20"/></padding>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Assigning:" styleClass="form-label"/>
+                        <Label fx:id="lblEditingName" styleClass="form-section-title"/>
+                        <HBox spacing="24">
+                            <HBox spacing="6">
+                                <Label text="Current Dept:" styleClass="form-label"/>
+                                <Label fx:id="lblCurrentDept" styleClass="form-hint"/>
+                            </HBox>
+                            <HBox spacing="6">
+                                <Label text="Status:" styleClass="form-label"/>
+                                <Label fx:id="lblEmpStatus" styleClass="form-hint"/>
+                            </HBox>
+                        </HBox>
+                    </VBox>
+                    <Button text="Clear Selection" onAction="#handleCancel" styleClass="btn-secondary"/>
+                </HBox>
+
+                <!-- ── 2  Target Department ── -->
+                <VBox styleClass="form-section-card" spacing="0">
+                    <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                        <Label text="2   Target Department" styleClass="form-section-title"/>
+                    </HBox>
+                    <VBox styleClass="form-section-body" spacing="10">
+                        <Label text="Select Department *" styleClass="form-label"/>
+                        <ComboBox fx:id="cbDepartment" maxWidth="Infinity"
+                                  promptText="Choose target department..."/>
+                        <Label fx:id="errDept" styleClass="form-field-error"
+                               visible="false" managed="false"/>
+                        <Label fx:id="lblDeptInfo" styleClass="form-hint" wrapText="true"
+                               text="Select a department to see headcount and manager details."/>
+                    </VBox>
+                </VBox>
+
+                <!-- ── 3  Assignment Details ── -->
+                <VBox styleClass="form-section-card" spacing="0">
+                    <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                        <Label text="3   Assignment Details" styleClass="form-section-title"/>
+                    </HBox>
+                    <VBox styleClass="form-section-body" spacing="16">
+
+                        <HBox spacing="16">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Effective Date *" styleClass="form-label"/>
+                                <DatePicker fx:id="dpEffectiveDate" maxWidth="Infinity"/>
+                                <Label fx:id="errDate" styleClass="form-field-error"
+                                       visible="false" managed="false"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <!-- Spacer column — keeps layout symmetric -->
+                            </VBox>
+                        </HBox>
+
+                        <VBox spacing="4">
+                            <Label text="Remark (optional)" styleClass="form-label"/>
+                            <TextArea fx:id="taRemark" prefRowCount="3" wrapText="true"
+                                      promptText="e.g. Cross-functional project assignment, re-org following merger, maternity cover..."/>
+                        </VBox>
+
+                    </VBox>
+                </VBox>
+
+                <!-- ── 4  Transfer History (read-only) ── -->
+                <VBox styleClass="form-section-card" spacing="0">
+                    <HBox styleClass="form-section-header" alignment="CENTER_LEFT">
+                        <Label text="4   Transfer History  (read-only)" styleClass="form-section-title"/>
+                    </HBox>
+                    <VBox styleClass="form-section-body" spacing="8">
+                        <Label text="Assignment history is immutable. Corrections require a new superseding assignment record."
+                               styleClass="form-hint"/>
+                        <TableView fx:id="historyTable" prefHeight="160"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Action Buttons -->
+                <HBox spacing="12" alignment="CENTER_RIGHT">
+                    <padding><Insets top="4" bottom="4"/></padding>
+                    <Button text="Cancel" onAction="#handleCancel" styleClass="btn-secondary"/>
+                    <Button fx:id="btnAssign" text="Confirm Assignment"
+                            onAction="#handleAssign" styleClass="btn-primary"/>
+                </HBox>
+
+            </VBox>
+            <!-- end assignSection -->
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>

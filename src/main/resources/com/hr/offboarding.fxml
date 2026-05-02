@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hr.ui.OffboardingScreenController"
+      spacing="0" styleClass="module-pane">
+
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="3">
+            <Label text="Employee Offboarding" styleClass="module-title"/>
+            <Label text="Manage resignations, terminations, and employee exits" styleClass="module-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="12" VBox.vgrow="ALWAYS">
+        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+        <!-- Initiate Form -->
+        <VBox styleClass="card" spacing="12">
+            <Label text="Initiate Offboarding" styleClass="card-title"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Employee:" styleClass="form-label"/>
+                <ComboBox fx:id="cbEmployee" prefWidth="210"/>
+                <Label text="Type:" styleClass="form-label"/>
+                <ComboBox fx:id="cbSeparationType" prefWidth="180"/>
+                <Label text="Last Day:" styleClass="form-label"/>
+                <DatePicker fx:id="dpLastWorking" prefWidth="145"/>
+            </HBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Exit Reason:" styleClass="form-label"/>
+                <TextArea fx:id="taExitReason" prefWidth="500" prefRowCount="2" HBox.hgrow="ALWAYS"
+                          promptText="Optional: exit reason or notes"/>
+                <Button text="Initiate Offboarding" onAction="#handleInitiate" styleClass="btn-danger"/>
+            </HBox>
+        </VBox>
+
+        <TableView fx:id="table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId"             text="ID"              prefWidth="50"/>
+                <TableColumn fx:id="colEmployee"       text="Employee"        prefWidth="160"/>
+                <TableColumn fx:id="colSeparationType" text="Separation Type" prefWidth="150"/>
+                <TableColumn fx:id="colLastWorking"    text="Last Working Day" prefWidth="140"/>
+                <TableColumn fx:id="colStatus"         text="Status"          prefWidth="180"/>
+                <TableColumn fx:id="colSettlement"     text="Settlement"      prefWidth="120"/>
+            </columns>
+            <placeholder><Label text="No offboarding records found." styleClass="label-muted"/></placeholder>
+        </TableView>
+    </VBox>
+</VBox>
