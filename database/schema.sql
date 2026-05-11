@@ -11,6 +11,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS org_history;
 DROP TABLE IF EXISTS audit_log;
 DROP TABLE IF EXISTS hr_analytics_reports;
+DROP TABLE IF EXISTS performance_metrics;
 DROP TABLE IF EXISTS compliance_reports;
 DROP TABLE IF EXISTS performance_evaluations;
 DROP TABLE IF EXISTS evaluation_cycles;
@@ -282,7 +283,21 @@ CREATE TABLE hr_analytics_reports (
 );
 
 -- ============================================================
--- 16. audit_log
+-- 16. performance_metrics
+-- ============================================================
+CREATE TABLE performance_metrics (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    operation_name VARCHAR(150) NOT NULL,
+    elapsed_ms BIGINT NOT NULL,
+    sla_breached BOOLEAN NOT NULL DEFAULT FALSE,
+    total_operations INT NOT NULL,
+    total_time_ms BIGINT NOT NULL,
+    average_response_time_ms DECIMAL(10,2) NOT NULL,
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================
+-- 17. audit_log
 -- ============================================================
 CREATE TABLE audit_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -297,7 +312,7 @@ CREATE TABLE audit_log (
 );
 
 -- ============================================================
--- 17. org_history
+-- 18. org_history
 -- ============================================================
 CREATE TABLE org_history (
     id INT AUTO_INCREMENT PRIMARY KEY,

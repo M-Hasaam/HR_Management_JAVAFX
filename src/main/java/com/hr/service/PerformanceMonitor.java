@@ -1,5 +1,9 @@
 package com.hr.service;
 
+import com.hr.dao.PerformanceMetricsDAO;
+
+import java.sql.SQLException;
+
 // Non-Functional Requirement (NFR): Performance — Response Time < 3 seconds.
 //
 // Requirement: "Form submissions must complete in < 3 seconds under normal load."
@@ -14,8 +18,20 @@ public class PerformanceMonitor {
 
     private static final long SLA_THRESHOLD_MS = 3_000; // NFR: 3-second SLA
 
-    private int  totalOperations = 0;
-    private long totalTimeMs     = 0;
+    private int totalOperations = 0;
+    private long totalTimeMs = 0;
+    private final PerformanceMetricsDAO metricsDAO;
+
+    public PerformanceMonitor() {
+        PerformanceMetricsDAO dao;
+        try {
+            dao = new PerformanceMetricsDAO();
+        } catch (SQLException e) {
+            dao = null;
+            System.err.println("[PERFORMANCE] Database persistence disabled: " + e.getMessage());
+        }
+        this.metricsDAO = dao;
+    }
 
     /**
      * Records the elapsed time for a completed operation.
@@ -27,8 +43,9 @@ public class PerformanceMonitor {
     public void recordOperation(String operationName, long elapsedMs) {
         totalOperations++;
         totalTimeMs += elapsedMs;
+        boolean slaBreached = elapsedMs > SLA_THRESHOLD_MS;
 
-        if (elapsedMs > SLA_THRESHOLD_MS) {
+        if (slaBreached) {
             System.err.println("[PERFORMANCE WARNING] SLA BREACH: '"
                     + operationName + "' took " + elapsedMs + " ms"
                     + " (limit: " + SLA_THRESHOLD_MS + " ms)");
@@ -36,6 +53,8 @@ public class PerformanceMonitor {
             System.out.println("[PERFORMANCE] '" + operationName + "' completed in "
                     + elapsedMs + " ms — within SLA.");
         }
+
+        persistOperation(operationName, elapsedMs, slaBreached);
     }
 
     /**
@@ -60,7 +79,28 @@ public class PerformanceMonitor {
     }
 
     /** Returns total number of recorded operations. */
-    public int getTotalOperations() { return totalOperations; }
+    public int getTotalOperations() {
+        return totalOperations;
+    }
+
+    private void persistOperation(String operationName, long elapsedMs, boolean slaBreached) {
+        if (metricsDAO == null) {
+            return;
+        }
+
+        try {
+            metricsDAO.saveOperation(
+                    operationName,
+                    elapsedMs,
+                    slaBreached,
+                    totalOperations,
+                    totalTimeMs,
+                    getAverageResponseTimeMs());
+        } catch (SQLException e) {
+            System.err.println("[PERFORMANCE] Failed to persist metrics for '"
+                    + operationName + "': " + e.getMessage());
+        }
+    }
 
     /** Functional interface for operations that may throw checked exceptions. */
     @FunctionalInterface

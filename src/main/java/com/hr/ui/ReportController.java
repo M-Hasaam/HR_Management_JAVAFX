@@ -1,5 +1,6 @@
 package com.hr.ui;
 // GRASP Pattern: Controller — handles UC-14 Generate Compliance Report
+
 // Participants: ComplianceReport (Creator/Information Expert),
 //              ComplianceDataAgg (Pure Fabrication), ReportGenerator (Pure Fabrication),
 //              SecureStorage (Pure Fabrication)
@@ -8,6 +9,7 @@ import com.hr.controller.ComplianceReportController;
 import com.hr.dao.ComplianceReportDAO;
 import com.hr.model.ComplianceReport;
 import com.hr.service.ComplianceDataAgg;
+import com.hr.service.PerformanceMonitor;
 import com.hr.service.ReportGenerator;
 import com.hr.service.SecureStorage;
 import javafx.collections.FXCollections;
@@ -21,35 +23,47 @@ import java.sql.SQLException;
 
 public class ReportController {
 
-    @FXML private ComboBox<String> cbDomain;
-    @FXML private TextField        tfPeriod;
-    @FXML private ComboBox<String> cbFormat;
-    @FXML private Label            lblResult;
+    @FXML
+    private ComboBox<String> cbDomain;
+    @FXML
+    private TextField tfPeriod;
+    @FXML
+    private ComboBox<String> cbFormat;
+    @FXML
+    private Label lblResult;
 
-    @FXML private TableView<ComplianceReport>               table;
-    @FXML private TableColumn<ComplianceReport, Integer>    colId;
-    @FXML private TableColumn<ComplianceReport, String>     colType;
-    @FXML private TableColumn<ComplianceReport, String>     colGeneratedAt;
-    @FXML private TableColumn<ComplianceReport, String>     colFormat;
-    @FXML private TableColumn<ComplianceReport, String>     colStatus;
-    @FXML private TableColumn<ComplianceReport, String>     colArchivePath;
+    @FXML
+    private TableView<ComplianceReport> table;
+    @FXML
+    private TableColumn<ComplianceReport, Integer> colId;
+    @FXML
+    private TableColumn<ComplianceReport, String> colType;
+    @FXML
+    private TableColumn<ComplianceReport, String> colGeneratedAt;
+    @FXML
+    private TableColumn<ComplianceReport, String> colFormat;
+    @FXML
+    private TableColumn<ComplianceReport, String> colStatus;
+    @FXML
+    private TableColumn<ComplianceReport, String> colArchivePath;
 
     private ComplianceReportController complianceReportController; // SD Controller (UC-14)
-    private ComplianceDataAgg          complianceDataAgg;
-    private ReportGenerator            reportGenerator;
-    private SecureStorage              secureStorage;
-    private ComplianceReportDAO        reportDAO;
+    private ComplianceDataAgg complianceDataAgg;
+    private ReportGenerator reportGenerator;
+    private SecureStorage secureStorage;
+    private ComplianceReportDAO reportDAO;
+    private final PerformanceMonitor performanceMonitor = new PerformanceMonitor();
 
     private final ObservableList<ComplianceReport> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         reportGenerator = new ReportGenerator();
-        secureStorage   = new SecureStorage();
+        secureStorage = new SecureStorage();
         try {
             complianceReportController = new ComplianceReportController(); // SD Controller
             complianceDataAgg = new ComplianceDataAgg();
-            reportDAO         = new ComplianceReportDAO();
+            reportDAO = new ComplianceReportDAO();
         } catch (SQLException e) {
             showError("Database Error", e.getMessage());
             return;
@@ -74,12 +88,20 @@ public class ReportController {
 
     public void generateComplianceReport(String domain, String period, String format)
             throws SQLException {
-        // Delegate to SD Controller (UC-14) — full 3-tier workflow with Factory + Strategy + NFR
-        ComplianceReport report = complianceReportController.generateComplianceReport(
-                domain, period, format, 1);
-        loadReports();
-        lblResult.setText("Report generated: " + report.getReportType()
-                + " | Format: " + format + " | Archive: " + report.getArchivePath());
+        long start = System.currentTimeMillis();
+        try {
+            // Delegate to SD Controller (UC-14) — full 3-tier workflow with Factory +
+            // Strategy + NFR
+            ComplianceReport report = complianceReportController.generateComplianceReport(
+                    domain, period, format, 1);
+            loadReports();
+            lblResult.setText("Report generated: " + report.getReportType()
+                    + " | Format: " + format + " | Archive: " + report.getArchivePath());
+        } finally {
+            performanceMonitor.recordOperation(
+                    "Generate compliance report",
+                    System.currentTimeMillis() - start);
+        }
     }
 
     @FXML
