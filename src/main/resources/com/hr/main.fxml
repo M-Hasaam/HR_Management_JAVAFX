@@ -18,7 +18,7 @@
             <HBox fx:id="brandBar" styleClass="sidebar-brand" alignment="CENTER_LEFT" spacing="8">
                 <Label text="HR" styleClass="brand-badge"/>
                 <VBox fx:id="brandText" spacing="2" HBox.hgrow="ALWAYS">
-                    <Label text="HR Management" styleClass="app-title"/>
+                    <Label text="Pulse HR" styleClass="app-title"/>
                     <Label text="System" styleClass="app-subtitle"/>
                 </VBox>
                 <Button fx:id="btnCollapse" text="&#x25C4;" styleClass="collapse-btn"

@@ -15,7 +15,7 @@
             <!-- Logo area -->
             <VBox alignment="CENTER" spacing="10" styleClass="login-header">
                 <Label text="HR" styleClass="login-logo"/>
-                <Label text="HR Management System" styleClass="login-app-name"/>
+                <Label text="Pulse HR" styleClass="login-app-name"/>
                 <Label text="Sign in to continue" styleClass="login-subtitle"/>
             </VBox>
 
